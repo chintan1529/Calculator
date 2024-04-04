@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Return Book</title>
+</head>
+<body>
+    <h1>Return a Book</h1>
+    <form method="POST" action="{{ url_for('return_book') }}">
+        <label for="input_name">Book or Borrower Name:</label>
+        <input type="text" id="input_name" name="input_name" required>
+        <br>
+        <button type="submit">Return Book</button>
+    </form>
+</body>
+</html>

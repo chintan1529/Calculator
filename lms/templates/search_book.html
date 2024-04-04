@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Book</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+        h1, h2 {
+            color: #333;
+            text-align: center;
+            margin-top: 20px;
+        }
+        form {
+            margin: 20px auto;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="date"], button {
+            padding: 8px;
+            margin-bottom: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="date"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        hr {
+            border: 0;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Search Book</h1>
+    <form method="POST">
+        <label for="query">Enter the title, author, or keyword:</label>
+        <input type="text" id="query" name="query" required>
+        <button type="submit">Search</button>
+    </form>
+    {% if results %}
+        <h2>Search Results</h2>
+        <ul>
+            {% for book in results %}
+                <li>Title: {{ book['volumeInfo']['title'] }}</li>
+                <li>Authors: {% for author in book['volumeInfo'].get('authors', []) %} {{ author }} {% endfor %}</li>
+                <li>ISBN: {{ book['volumeInfo'].get('industryIdentifiers', [''])[0]['identifier'] }}</li>
+                <li>
+                    <form action="{{ url_for('issue_book') }}" method="POST">
+                        <input type="hidden" name="title" value="{{ book['volumeInfo']['title'] }}">
+                        <input type="hidden" name="author" value="{% if book['volumeInfo'].get('authors') %}{{ book['volumeInfo']['authors'][0] }}{% endif %}">
+                        <input type="hidden" name="isbn" value="{{ book['volumeInfo'].get('industryIdentifiers', [''])[0]['identifier'] }}">
+                        <label for="name">Your Name:</label>
+                        <input type="text" id="name" name="name" required><br>
+                        <label for="number">Your Number:</label>
+                        <input type="text" id="number" name="number" required><br>
+                        <label for="date_issued">Date Issued:</label>
+                        <input type="date" id="date_issued" name="date_issued" required><br>
+                        <button type="submit">Issue</button>
+                    </form>
+                </li>
+                <hr>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
